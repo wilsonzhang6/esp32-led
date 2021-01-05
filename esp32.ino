@@ -3,9 +3,6 @@
 #include "SPIFFS.h"
 #include "FastLED.h"
 
-#define SSID "asus"
-#define PW "307zhang"
-
 #define NUM_LEDS 30
 #define DATA_PIN 12
 CRGB leds[NUM_LEDS];
@@ -27,21 +24,18 @@ void setup() {
   if(!SPIFFS.begin(true)){
     Serial.println("Error mounting SPIFFS");
   }
-  
+
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
 
-  int status = WiFi.begin(SSID, PW);
+  int status = WiFi.begin();
   while(status != WL_CONNECTED){
-    Serial.print("attempting to connect to ");
-    Serial.print(SSID);
-    Serial.println("...");
-    status = WiFi.begin(SSID, PW);
+    Serial.println("attempting to connect to wifi...");
+    status = WiFi.begin();
     delay(1000);
   }
-  Serial.print("connected to ");
-  Serial.println(SSID);
+  Serial.println("connected");
 
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/index.html");
